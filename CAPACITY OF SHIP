@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+#include <algorithm>
+using namespace std;
+bool check(int mid,vector<int>&weights,int days){
+    int n=weights.size();
+    int m=mid;
+    int count =1; // Start from 1 day
+    for(int i=0;i<n;i++){
+        if(m>=weights[i]){
+            m -=weights[i];
+        }
+        else{
+            count++;
+            m=mid;
+            m -=weights[i];
+        }
+    }
+    if(count>days) return false;
+    else return true;
+}
+int main()
+//capacity of the ship
+{
+    vector<int> weights = {1,2,3,4,5,6,7,8,9,10};
+    int days=5;
+    int max = INT_MIN;
+    int sum = 0;
+
+    //step 1 find the maximum no in array and sum of an aray 
+    for (int i = 0; i < weights.size(); i++)
+    {
+        if(weights[i]>max){
+            max=weights[i];
+
+        }
+        sum += weights[i];
+        
+    }
+    int lo=max;
+    int hi= sum;
+    int mimcapacity=sum;
+    // Step 2: Binary search for minimum capacity
+    while(lo<=hi){
+       int mid=lo+(hi-lo)/2;
+       if(check(mid,weights,days)==true){
+        mimcapacity=mid;
+        hi=mid-1;
+       }
+       else lo=mid+1;
+
+    }
+    cout<<"MInimum Capicity Is:"<<mimcapacity;
+}
+//TC=O(n*log(sum-max))
