@@ -1,0 +1,44 @@
+
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+// Function to check if Koko can eat all bananas within 'h' hours at a given speed
+bool check(int speed,vector<int>&piles,int h){
+    long long count=0; // Variable to track total hours required
+    int n=piles.size();
+    for(int i=0;i<n;i++){// Loop through each pile and calculate required time to eat it
+        if(count>h) return false;
+
+        if(speed>=piles[i]) count++;
+        else if(piles[i]%speed==0) count +=piles[i]/speed; // If perfectly divisible, take exact division result
+        else count+=piles[i]/speed +1;
+    }
+      if(count>h) return false;
+      else return true;
+}
+int main(){
+    //koko eating banana
+    vector<int>piles={30,11,23,4,20};
+    int h=6;
+    int n=piles.size();
+    int maxi=-1;
+
+    // Find the maximum pile size (upper bound for binary search)
+    for(int i=0;i<n;i++){
+        maxi=max(maxi,piles[i]);
+    }
+    int lo=1;// Minimum possible eating speed
+    int hi=maxi; // Maximum possible eating speed
+    int ans=-1;
+    while(lo<=hi){// Binary search to find the optimal eating speed
+        int mid=lo+(hi-lo)/2;
+        if(check(mid,piles,h)==true){//If it's possible at 'mid' speed
+            ans=mid;
+            hi=mid-1; // Try to find a smaller speed
+        }
+        else lo=mid+1; // Increase speed if 'mid' is too slow
+
+    }
+    cout<<"hr required to finish the banana :"<<ans;
+}
